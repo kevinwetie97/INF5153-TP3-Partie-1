@@ -61,32 +61,32 @@ public class EvaluateVisitor implements Visitor {
 
     @Override
     public void visit(LiteralNumber literalNumber) {
-        // Rien à faire ici
+        // Les numériques ne nécessitent aucune action spécifique.
     }
 
     @Override
     public void visit(LiteralString literalString) {
-        // Rien à faire ici
+        // Les chaîne de caractères ne nécessitent aucune action spécifique.
     }
 
     @Override
     public void visit(Identifier identifier) {
-        // Rien à faire ici
+        // Les identifiants ne nécessitent aucune action spécifique ici.
     }
 
     @Override
     public void visit(UnaryExpression unaryExpression) {
-        // Rien à faire ici
+        // L'évaluation des expressions unaires pourrait être implémentée ici si nécessaire.
     }
 
     @Override
     public void visit(BinaryExpression binaryExpression) {
-        // Rien à faire ici
+        // L'évaluation des expressions binaires est effectuée ailleurs.
     }
 
     @Override
     public void visit(Condition condition) {
-        // Rien à faire ici
+        // L'évaluation des conditions est effectuée ailleurs.
     }
 
     private int evaluateExpression(Expression expression) {
@@ -95,6 +95,13 @@ public class EvaluateVisitor implements Visitor {
         } else if (expression instanceof Identifier) {
             String varName = ((Identifier) expression).getName();
             return variableValues.getOrDefault(varName, 0);
+        } else if (expression instanceof UnaryExpression) {
+            UnaryExpression unaryExpr = (UnaryExpression) expression;
+            int value = evaluateExpression(unaryExpr.getExpression());
+            switch (unaryExpr.getOperator()) {
+                case '+': return +value;
+                case '-': return -value;
+            }
         } else if (expression instanceof BinaryExpression) {
             BinaryExpression binaryExpr = (BinaryExpression) expression;
             int leftValue = evaluateExpression(binaryExpr.getLeftExpression());
@@ -104,6 +111,14 @@ public class EvaluateVisitor implements Visitor {
                 case '-': return leftValue - rightValue;
                 case '*': return leftValue * rightValue;
                 case '/': return leftValue / rightValue;
+            }
+        } else if (expression instanceof Condition) {
+            Condition condition = (Condition) expression;
+            int leftValue = evaluateExpression(condition.getLeftExpression());
+            int rightValue = evaluateExpression(condition.getRightExpression());
+            switch (condition.getOperator()) {
+                case "==": return leftValue == rightValue ? 1 : 0;
+                case "!=": return leftValue != rightValue ? 1 : 0;
             }
         }
         return 0;

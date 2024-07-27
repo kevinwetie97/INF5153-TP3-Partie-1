@@ -5,25 +5,42 @@ import main.java.visitor.EvaluateVisitor;
 
 public class Main {
     public static void main(String[] args) {
-        // Création d'un exemple d'AST pour une condition
-        Expression left = new Identifier("a");
-        Expression right = new LiteralNumber(2);
-        Condition condition = new Condition(left, "!=", right);
+        // Création de l'AST pour le code donné
+        // {
+        //   a = b + 18 ;
+        //   if (a != 2 ) then {
+        //      c = 15 ;
+        //   }
+        //   print(c) ;
+        // }
 
-        // Création d'un bloc then et else
+        // Expression: b + 18
+        Expression expr1 = new BinaryExpression(new Identifier("b"), '+', new LiteralNumber(18));
+
+        // Assignment: a = b + 18;
+        Assignment assignment1 = new Assignment(new Identifier("a"), expr1);
+
+        // Condition: a != 2
+        Condition condition = new Condition(new Identifier("a"), "!=", new LiteralNumber(2));
+
+        // Then block: { c = 15; }
         Block thenBlock = new Block();
-        thenBlock.addStatement(new Assignment(new Identifier("b"), new LiteralNumber(1)));
+        Assignment assignment2 = new Assignment(new Identifier("c"), new LiteralNumber(15));
+        thenBlock.addStatement(assignment2);
 
-        Block elseBlock = new Block();
-        elseBlock.addStatement(new Assignment(new Identifier("b"), new LiteralNumber(0)));
+        // If statement: if (a != 2) then { c = 15; }
+        StatementIF statementIF = new StatementIF(condition, thenBlock, null);
 
-        // Création de StatementIF
-        StatementIF statementIF = new StatementIF(condition, thenBlock, elseBlock);
+        // Print statement: print(c);
+        StatementPrint printStatement = new StatementPrint(new Identifier("c"));
 
-        // Création de UnitCompilation
+        // Main block
         Block mainBlock = new Block();
+        mainBlock.addStatement(assignment1);
         mainBlock.addStatement(statementIF);
+        mainBlock.addStatement(printStatement);
 
+        // compilation
         UnitCompilation unitCompilation = new UnitCompilation(mainBlock);
 
         // Utilisation du visiteur pour évaluer l'AST
