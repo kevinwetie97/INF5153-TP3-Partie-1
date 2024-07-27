@@ -1,6 +1,6 @@
-package visitor;
+package main.java.visitor;
 
-import ast.*;
+import main.java.ast.*;
 
 public interface Visitor {
     void visit(UnitCompilation unitCompilation);

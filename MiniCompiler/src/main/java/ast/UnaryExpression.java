@@ -1,6 +1,6 @@
-package ast;
+package main.java.ast;
 
-import visitor.Visitor;
+import main.java.visitor.Visitor;
 
 public class UnaryExpression extends Expression {
     private char operator;
