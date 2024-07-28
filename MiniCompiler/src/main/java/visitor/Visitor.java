@@ -2,6 +2,10 @@ package main.java.visitor;
 
 import main.java.ast.*;
 
+/**
+ * Interface Visitor pour le patron de conception Visiteur.
+ * Cette interface définit les méthodes pour visiter chaque type de nœud dans l'AST.
+ */
 public interface Visitor {
     void visit(UnitCompilation unitCompilation);
     void visit(Block block);

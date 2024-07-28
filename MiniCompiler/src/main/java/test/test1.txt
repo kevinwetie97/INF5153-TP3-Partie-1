@@ -1,0 +1,42 @@
+{
+  // Cas de test 1: Affectation simple
+  a = 10;
+  print(a);
+
+  // Cas de test 2: Affectation avec expression binaire
+  b = a + 20;
+  print(b);
+
+  // Cas de test 3: Condition if sans else
+  if (b == 30) then {
+    c = 15;
+  }
+  print(c);
+
+  // Cas de test 4: Condition if avec else
+  if (b != 30) then {
+    d = 5;
+  } else {
+    d = 10;
+  }
+  print(d);
+
+  // Cas de test 5: Boucle while
+  e = 3;
+  while (e != 0) {
+    e = e - 1;
+  }
+  print(e);
+
+  // Cas de test 6: Lecture et impression
+  read("Enter value for f", f);
+  print(f);
+
+  // Cas de test 7: Expression unaire
+  g = -f;
+  print(g);
+
+  // Cas de test 8: Expression binaire complexe
+  h = (a + b) * (c - d);
+  print(h);
+}
