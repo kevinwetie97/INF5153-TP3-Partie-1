@@ -1,6 +1,7 @@
 package main.java.parser;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.StringTokenizer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -9,21 +10,22 @@ import java.util.regex.Pattern;
  */
 
 public class Lexer {
-
-    private static final Pattern TOKEN_PATTERN = Pattern.compile(
-            "\\d+|" +              // Numbers
-                    "\"[^\"]*\"|" +        // String literals
-                    "[a-zA-Z_][a-zA-Z0-9_]*|" +  // Identifiers
-                    "==|!=|<=|>=|[{}();,+*/=-]"  // Operators and delimiters
-    );
-
-    public static List<String> tokenize(String input) {
+    public static List<String> tokenize(String sourceCode) {
         List<String> tokens = new ArrayList<>();
-        Matcher matcher = TOKEN_PATTERN.matcher(input);
-        while (matcher.find()) {
-            tokens.add(matcher.group());
+        StringTokenizer tokenizer = new StringTokenizer(sourceCode, " =+*/()-;{}\" \n\t\r", true);
+
+        while (tokenizer.hasMoreTokens()) {
+            String token = tokenizer.nextToken();
+            if (token.startsWith("//")) {
+                // Ignorer le reste de la ligne
+                while (tokenizer.hasMoreTokens() && !token.equals("\n")) {
+                    token = tokenizer.nextToken();
+                }
+            } else if (!token.trim().isEmpty()) {
+                tokens.add(token);
+            }
         }
+
         return tokens;
     }
-
 }

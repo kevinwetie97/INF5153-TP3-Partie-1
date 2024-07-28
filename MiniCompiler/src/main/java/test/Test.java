@@ -9,7 +9,7 @@ import java.nio.file.Paths;
 import java.io.File;
 public class Test {
     public static void main(String[] args) {
-        String testFile = "main/java/test/test1.txt";
+        String testFile = "MiniCompiler/src/main/java/test/test1.txt";
 
         try {
             // Lire le contenu du fichier

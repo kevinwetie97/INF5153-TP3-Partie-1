@@ -7,7 +7,6 @@ import java.util.Iterator;
 /**
  * Classe Parser responsable de l'analyse des tokens et de la construction de l'AST.
  */
-
 public class Parser {
     private Iterator<String> tokens;
     private String currentToken;
@@ -31,11 +30,13 @@ public class Parser {
      * Avance au token suivant dans la liste.
      */
     private void advance() {
-        if (tokens.hasNext()) {
+        while (tokens.hasNext()) {
             currentToken = tokens.next();
-        } else {
-            currentToken = null;
+            if (!currentToken.equals(";") && !currentToken.startsWith("//") && !currentToken.isEmpty()) {
+                return;
+            }
         }
+        currentToken = null;
     }
 
     /**
@@ -49,8 +50,18 @@ public class Parser {
             advance();
             while (!"}".equals(currentToken)) {
                 block.addStatement(parseStatement());
+                if (currentToken != null && currentToken.equals(";")) {
+                    advance();
+                }
             }
             advance();
+        } else {
+            while (currentToken != null && !"}".equals(currentToken)) {
+                block.addStatement(parseStatement());
+                if (currentToken != null && currentToken.equals(";")) {
+                    advance();
+                }
+            }
         }
         return block;
     }
@@ -61,16 +72,19 @@ public class Parser {
      * @return l'instruction analysée
      */
     private Statement parseStatement() {
-        if (currentToken.matches("[a-zA-Z_][a-zA-Z0-9_]*")) {
-            return parseAssignment();
+        if (currentToken == null) {
+            throw new IllegalArgumentException("Token inattendu: null");
+        }
+        if ("print".equals(currentToken)) {
+            return parseStatementPrint();
+        } else if ("read".equals(currentToken)) {
+            return parseStatementRead();
         } else if ("if".equals(currentToken)) {
             return parseStatementIF();
         } else if ("while".equals(currentToken)) {
             return parseStatementWhile();
-        } else if ("print".equals(currentToken)) {
-            return parseStatementPrint();
-        } else if ("read".equals(currentToken)) {
-            return parseStatementRead();
+        } else if (currentToken.matches("[a-zA-Z_][a-zA-Z0-9_]*")) {
+            return parseAssignment();
         } else {
             throw new IllegalArgumentException("Token inattendu: " + currentToken);
         }
@@ -84,12 +98,13 @@ public class Parser {
     private Assignment parseAssignment() {
         Identifier identifier = new Identifier(currentToken);
         advance();
+        if (!"=".equals(currentToken)) {
+            throw new IllegalArgumentException("Token inattendu, attendu '=': " + currentToken);
+        }
         advance(); // Ignore '='
         Expression expression = parseExpression();
-        advance(); // Ignore ';'
         return new Assignment(identifier, expression);
     }
-
     /**
      * Analyse une instruction conditionnelle if.
      *
@@ -97,9 +112,18 @@ public class Parser {
      */
     private StatementIF parseStatementIF() {
         advance(); // Ignore 'if'
+        if (!"(".equals(currentToken)) {
+            throw new IllegalArgumentException("Token inattendu, attendu '(': " + currentToken);
+        }
         advance(); // Ignore '('
         Condition condition = parseCondition();
+        if (!")".equals(currentToken)) {
+            throw new IllegalArgumentException("Token inattendu, attendu ')': " + currentToken);
+        }
         advance(); // Ignore ')'
+        if (!"then".equals(currentToken)) {
+            throw new IllegalArgumentException("Token inattendu, attendu 'then': " + currentToken);
+        }
         advance(); // Ignore 'then'
         Block thenBlock = parseBlock();
         Block elseBlock = null;
@@ -117,8 +141,14 @@ public class Parser {
      */
     private StatementWhile parseStatementWhile() {
         advance(); // Ignore 'while'
+        if (!"(".equals(currentToken)) {
+            throw new IllegalArgumentException("Token inattendu, attendu '(': " + currentToken);
+        }
         advance(); // Ignore '('
         Condition condition = parseCondition();
+        if (!")".equals(currentToken)) {
+            throw new IllegalArgumentException("Token inattendu, attendu ')': " + currentToken);
+        }
         advance(); // Ignore ')'
         Block block = parseBlock();
         return new StatementWhile(condition, block);
@@ -131,12 +161,18 @@ public class Parser {
      */
     private StatementPrint parseStatementPrint() {
         advance(); // Ignore 'print'
+        if (!"(".equals(currentToken)) {
+            throw new IllegalArgumentException("Token inattendu, attendu '(': " + currentToken);
+        }
         advance(); // Ignore '('
         Expression expression = parseExpression();
+        if (!")".equals(currentToken)) {
+            throw new IllegalArgumentException("Token inattendu, attendu ')': " + currentToken);
+        }
         advance(); // Ignore ')'
-        advance(); // Ignore ';'
         return new StatementPrint(expression);
     }
+
 
     /**
      * Analyse une instruction read.
@@ -145,14 +181,22 @@ public class Parser {
      */
     private StatementRead parseStatementRead() {
         advance(); // Ignore 'read'
+        if (!"(".equals(currentToken)) {
+            throw new IllegalArgumentException("Token inattendu, attendu '(': " + currentToken);
+        }
         advance(); // Ignore '('
         LiteralString literalString = new LiteralString(currentToken);
         advance();
+        if (!",".equals(currentToken)) {
+            throw new IllegalArgumentException("Token inattendu, attendu ',': " + currentToken);
+        }
         advance(); // Ignore ','
         Identifier identifier = new Identifier(currentToken);
         advance();
+        if (!")".equals(currentToken)) {
+            throw new IllegalArgumentException("Token inattendu, attendu ')': " + currentToken);
+        }
         advance(); // Ignore ')'
-        advance(); // Ignore ';'
         return new StatementRead(literalString, identifier);
     }
 
@@ -200,4 +244,5 @@ public class Parser {
             return new BinaryExpression(leftExpression, operator, rightExpression);
         }
     }
+
 }
