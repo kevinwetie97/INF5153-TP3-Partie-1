@@ -1,5 +1,7 @@
 package main.java.visitor;
 
+import main.java.ast.*;
+
 public interface Visitor {
     void visit(UnitCompilation unitCompilation);
     void visit(Block block);

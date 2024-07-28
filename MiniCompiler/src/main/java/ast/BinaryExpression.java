@@ -1,10 +1,11 @@
 package main.java.ast;
-import visitor.Visitor;
+
+import main.java.visitor.Visitor;
 
 public class BinaryExpression extends Expression {
     private Expression leftExpression;
-    private Expression rightExpression;
     private char operator;
+    private Expression rightExpression;
 
     public BinaryExpression(Expression leftExpression, char operator, Expression rightExpression) {
         this.leftExpression = leftExpression;
@@ -16,12 +17,12 @@ public class BinaryExpression extends Expression {
         return leftExpression;
     }
 
-    public Expression getRightExpression() {
-        return rightExpression;
-    }
-
     public char getOperator() {
         return operator;
+    }
+
+    public Expression getRightExpression() {
+        return rightExpression;
     }
 
     @Override

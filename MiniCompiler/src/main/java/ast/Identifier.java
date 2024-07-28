@@ -1,5 +1,6 @@
 package main.java.ast;
-import visitor.Visitor;
+
+import main.java.visitor.Visitor;
 
 public class Identifier extends Expression {
     private String name;

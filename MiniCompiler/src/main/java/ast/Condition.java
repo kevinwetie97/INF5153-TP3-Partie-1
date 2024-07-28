@@ -1,10 +1,11 @@
 package main.java.ast;
-import visitor.Visitor;
 
-public class Condition {
+import main.java.visitor.Visitor;
+
+public class Condition extends Expression {
     private Expression leftExpression;
-    private Expression rightExpression;
     private String operator;
+    private Expression rightExpression;
 
     public Condition(Expression leftExpression, String operator, Expression rightExpression) {
         this.leftExpression = leftExpression;
@@ -16,12 +17,12 @@ public class Condition {
         return leftExpression;
     }
 
-    public Expression getRightExpression() {
-        return rightExpression;
-    }
-
     public String getOperator() {
         return operator;
+    }
+
+    public Expression getRightExpression() {
+        return rightExpression;
     }
 
     @Override

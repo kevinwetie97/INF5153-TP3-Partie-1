@@ -1,5 +1,6 @@
 package main.java.ast;
-import visitor.Visitor;
+
+import main.java.visitor.Visitor;
 
 public class Assignment extends Statement {
     private Identifier identifier;

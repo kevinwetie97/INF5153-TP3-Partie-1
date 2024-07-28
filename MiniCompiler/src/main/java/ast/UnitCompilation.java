@@ -1,7 +1,8 @@
 package main.java.ast;
-import visitor.Visitor;
 
-public class UnitCompilation {
+import main.java.visitor.Visitor;
+
+public class UnitCompilation extends Statement {
     private Block block;
 
     public UnitCompilation(Block block) {
@@ -12,6 +13,7 @@ public class UnitCompilation {
         return block;
     }
 
+    @Override
     public void accept(Visitor visitor) {
         visitor.visit(this);
     }

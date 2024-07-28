@@ -1,27 +1,28 @@
 package main.java.ast;
-import visitor.Visitor;
+
+import main.java.visitor.Visitor;
 
 public class StatementIF extends Statement {
     private Condition condition;
-    private Block blockThen;
-    private Block blockElse;
+    private Block thenBlock;
+    private Block elseBlock;
 
-    public StatementIF(Condition condition, Block blockThen, Block blockElse) {
+    public StatementIF(Condition condition, Block thenBlock, Block elseBlock) {
         this.condition = condition;
-        this.blockThen = blockThen;
-        this.blockElse = blockElse;
+        this.thenBlock = thenBlock;
+        this.elseBlock = elseBlock;
     }
 
     public Condition getCondition() {
         return condition;
     }
 
-    public Block getBlockThen() {
-        return blockThen;
+    public Block getThenBlock() {
+        return thenBlock;
     }
 
-    public Block getBlockElse() {
-        return blockElse;
+    public Block getElseBlock() {
+        return elseBlock;
     }
 
     @Override
