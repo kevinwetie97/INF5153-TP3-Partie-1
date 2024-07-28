@@ -1,6 +1,5 @@
-package ast;
+package main.java.ast;
 
-import visitor.Visitor;
 
 public class StatementRead extends Statement {
     private LiteralString literalString;

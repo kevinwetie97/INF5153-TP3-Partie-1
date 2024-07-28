@@ -1,5 +1,4 @@
-package ast;
-
+package main.java.ast;
 import visitor.Visitor;
 
 public class StatementIF extends Statement {
